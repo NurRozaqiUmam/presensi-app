@@ -16,6 +16,10 @@
 
     <!-- ========== Tabler Icon ========== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+    <!-- Sweetalert -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.css" />
+  
   </head>
   <body>
     <!-- ======== Preloader =========== -->
@@ -46,6 +50,31 @@
               <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
               <span class="text">Data Pegawai</span>
             </a>
+          </li>
+
+          <li class="nav-item nav-item-has-children mb-2">
+            <a
+              href="#0"
+              class="collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#master-data"
+              aria-controls="ddmenu_1"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-database-cog"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3" /><path d="M4 6v6c0 1.657 3.582 3 8 3c.21 0 .42 -.003 .626 -.01" /><path d="M20 11.5v-5.5" /><path d="M4 12v6c0 1.657 3.582 3 8 3" /><path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19.001 15.5v1.5" /><path d="M19.001 21v1.5" /><path d="M22.032 17.25l-1.299 .75" /><path d="M17.27 20l-1.3 .75" /><path d="M15.97 17.25l1.3 .75" /><path d="M20.733 20l1.3 .75" /></svg>
+              
+              <span class="text">Master Data</span>
+            </a>
+            <ul id="master-data" class="collapse dropdown-nav">
+              <li>
+                <a href="<?= base_url('admin/jabatan') ?>"> Data Jabatan </a>
+              </li>
+              <li>
+                <a href="index.html"> Lokasi Presensi </a>
+              </li>
+            </ul>
           </li>
 
           <li class="nav-item nav-item-has-children mb-2">
@@ -231,8 +260,65 @@
 
     <!-- ========= All Javascript files linkup ======== -->
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
-    <script src="<?= base_url('assets/js/jvectormap.min.js') ?>"></>
+    <script src="<?= base_url('assets/js/jvectormap.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/polyfill.js') ?>"></script>
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
+    
+    <!-- jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- datatables -->
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
+
+    <!-- Sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+    <script>
+      // datatables
+        $(document).ready( function () {
+            $('#datatables').DataTable();
+        });
+
+        // sweetalert berhasil
+        $(function(){
+          <?php if(session()->has('berhasil')){ ?>
+              const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  }
+              });
+              Toast.fire({
+                  icon: "success",
+                  title: "<?= $_SESSION['berhasil'] ?>"
+              });
+          <?php } ?>
+        });
+
+        // sweetalert konfirmasi hapus
+        $('.tombol-hapus').on('click', function(){
+            var getLink = $(this).attr('href');
+
+            Swal.fire({
+                title: "Yakin Hapus?",
+                text: "Data yang sudah dihapus tidak bisa dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = getLink;
+                }
+            });
+            return false;
+        });
+    </script>
   </body>
 </html>
